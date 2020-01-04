@@ -13,7 +13,7 @@ function auto() {
             mkdir ~/Documents/Projects
         fi
         cd ~/Documents/Projects
-        python ~/createProject.py $PWD $@
+        python ~/Project-Automation/createProject.py $PWD $@
         
         IFS=' '
         INPUT=$@
