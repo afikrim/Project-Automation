@@ -27,7 +27,7 @@ def main():
 
 def option(argv):
     i = 0
-    project_name = language = composer_repos = text_editor = github = ''
+    project_name = language = composer_repos = text_editor = github_username = ''
     node_package = []
     while i != len(argv):
         if argv[i] in ['-p', '--project-name']:
