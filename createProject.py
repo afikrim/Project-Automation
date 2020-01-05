@@ -195,7 +195,7 @@ def header():
 
 def error():
     cprint("Usage :", "yellow")
-    cprint("  create-project [option] [argument]\n", 'white')
+    cprint("  auto [option] [argument]\n", 'white')
     cprint("Options :", "yellow")
     global options
     for option in options:
