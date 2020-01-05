@@ -14,8 +14,8 @@ options = [
         'Your command to open your favorite text editor. Ex: code, subl, etc.(required)'],
     ['-c|--php-framework',
         'Framework that you will use. All php framework that use composer are available. Usage: -c [composer dir] or --php-framework [composer dir], ex: -c laravel/laravel'],
-    ['--npm|--node-modules', 'Framework that you will use. All node modules are available. Usage: --npm [how many] [node modules] or --node-modules [how many] [node modules], ex --npm 2 express socket.io'],
-    ['-g|--github', 'To confirm this project upload to github repos or not. Usage: -g [username], ex -g afikrim'],
+    ['--npm|--node-modules', 'Framework that you will use. All node modules are available. Usage: --npm [node modules] or --node-modules [node modules], ex --npm express socket.io'],
+    ['-g|--github', 'To confirm this project upload to github repos or not.'],
 ]
 
 
@@ -27,8 +27,9 @@ def main():
 
 def option(argv):
     i = 0
-    project_name = language = composer_repos = text_editor = github_username = ''
+    project_name = language = composer_repos = text_editor = ''
     node_package = []
+    git_repo = False
     while i != len(argv):
         if argv[i] in ['-p', '--project-name']:
             if argv[i + 1] == '':
@@ -38,31 +39,28 @@ def option(argv):
             if argv[i + 1] == '':
                 error()
             language = argv[i + 1]
-        elif argv[i] in ['-c', '--composer_repos']:
+        elif argv[i] in ['-c', '--php-framework']:
             if argv[i + 1] == '':
                 error()
             composer_repos = argv[i + 1]
         elif argv[i] in ['--npm', '--node-modules']:
             j = 1
-            total = int(argv[i + 1])
-            while j != total:
-                node_package.append(argv[i + 1 + j])
+            while (i + j) < len(argv) and argv[i + j] not in '-p -l -c -t -g --project-name --language --php-framework --text-editor --github':
+                node_package.append(argv[i + j])
                 j += 1
         elif argv[i] in ['-t', '--text-editor']:
             if argv[i + 1] == '':
                 error()
             text_editor = argv[i + 1]
         elif argv[i] in ['-g', '--github']:
-            if argv[i + 1] == '':
-                error()
-            github_username = argv[i + 1]
+            git_repo = True
         i += 1
 
     run_command(project_name, language, composer_repos,
-                node_package, text_editor, github_username)
+                node_package, text_editor, git_repo)
 
 
-def run_command(project_name='', language='', composer_repos='', node_package=[], text_editor='', github_username=''):
+def run_command(project_name='', language='', composer_repos='', node_package=[], text_editor='', git_repo=False):
     hasPhp = object
     hasMysql = object
     hasComposer = object
@@ -103,16 +101,16 @@ def run_command(project_name='', language='', composer_repos='', node_package=[]
             install_framework(project_name, '', node_package)
         else:
             cprint("Creating project without framework", 'yellow')
-            try:
-                os.system(
-                    "cd " + sys.argv[1] + '/' + project_name + ";touch index.js" + ";touch README.md")
-                cprint("Successfully create new directory.", 'yellow')
-            except:
-                cprint("Something went wrong. Closing program")
-                sys.exit(1)
-    if github_username != '':
+        try:
+            os.system(
+                "cd " + sys.argv[1] + '/' + project_name + ";touch index.js" + ";touch README.md")
+            cprint("Successfully create new directory.", 'yellow')
+        except:
+            cprint("Something went wrong. Closing program")
+            sys.exit(1)
+    if git_repo:
         cprint("Processing to github...", "yellow")
-        create_repos(project_name, github_username)
+        create_repos(project_name)
     cprint("Opening text editor", 'yellow')
     os.system(text_editor + " " + sys.argv[1] + '/' + project_name)
     sys.exit()
@@ -125,15 +123,23 @@ def install_framework(project_name='', composer_repos='', node_package=[]):
     elif node_package != []:
         packages = ''
         for p in node_package:
-            packages += " " + p
+            packages += p + " "
         os.system("cd " + sys.argv[1] + '/' +
-                  project_name + ";npm init; npm i" + packages)
+                  project_name + ";npm init; npm i " + packages)
 
 
-def create_repos(project_name='', github_username=''):
-    username = raw_input("Username: ")
-    password = getpass.getpass(prompt="Password: ")
-    user = git(username, password).get_user()
+def create_repos(project_name=''):
+    loggedin = False
+    user = object
+    while not loggedin:
+        username = raw_input("Username: ")
+        password = getpass.getpass(prompt="Password: ")
+        user = git(username, password).get_user()
+        try:
+            user.login
+            loggedin = True
+        except:
+            cprint("Your credentials are wrong!", "red")
     repo = user.create_repo(project_name)
     cprint("Successfully create repository", "green")
 
