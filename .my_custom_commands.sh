@@ -12,7 +12,7 @@ function auto() {
             mkdir ~/Documents/Projects
         fi
         cd ~/Documents/Projects
-        python ~/Project-Automation/createProject.py $PWD $@
+        python ~/createProject.py $PWD $@
         
         IFS=' '
         INPUT=$@
@@ -30,6 +30,7 @@ function auto() {
 
         cd $dir
         unset j
+        unset dir
     else
         echo "Python 2.7 is not installed, you can get python 2.7.x from here : https://www.python.org/downloads/"
     fi
