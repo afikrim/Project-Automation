@@ -2,8 +2,7 @@
 
 # function to automate project
 function auto() {
-    if command -v python2.7 &>/dev/null; then
-        echo "Python 2.7 is installed"
+    if command -v python &>/dev/null; then
         if [ ! -d ~/Documents/Projects ]; then
             read -p "Project directory not exist. Do you want to create it?[Y/n]" confirm
             if [ "$confirm" = "n" ] || [ "$confirm" = "N" ]; then
