@@ -11,7 +11,11 @@
 
 
 Usage :
-  auto [option] [argument]
+  create [option] [argument]
+  delete [project-name]
+ex    :
+  create -p demo -l js -t code --npm --save express socket.io
+  delete demo
 
 Options :
   -p|--project-name    Your new project name(required)
