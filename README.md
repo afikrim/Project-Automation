@@ -30,7 +30,7 @@ Options :
 Custom command to automate you create your project
 
 # About
-This is a shell application that help you make your project really easy. This project run well on linux machine but i don't know this project also work on other OS or not.
+This is a shell application that help you make your project really easy. This project run well on linux machine but i don't know this project also work on other OS or not. This project inspired by https://github.com/KalleHallden/ProjectInitializationAutomation
 
 # How?
 ## Requirement
