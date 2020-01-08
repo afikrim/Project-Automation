@@ -61,4 +61,4 @@ source /path/to/file
 
 # example, source ~/Project-Automation/.my_custom_commands.sh
 ```
-Finally you can write ```auto``` in your shell to use this automation.
+Finally you can write ```create``` in your shell to use this automation.
