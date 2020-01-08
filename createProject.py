@@ -201,7 +201,11 @@ def header():
 
 def error():
     cprint("Usage :", "yellow")
-    cprint("  auto [option] [argument]\n", 'white')
+    cprint("  create [option] [argument]\n", 'white')
+    cprint("  delete [project-name]\n", 'white')
+    cprint("Ex :", "yellow")
+    cprint("  create -p demo -l js -t code --npm --save express socket.io\n", 'white')
+    cprint("  delete demo\n", 'white')
     cprint("Options :", "yellow")
     global options
     for option in options:
