@@ -37,15 +37,34 @@ function create() {
 }
 
 function open() {
-	cd ~/Documents/Projects/$1
+    cd ~/Documents/Projects/$1
 }
 
 function delete() {
-	read -p "Are you sure want to delete it?[y/n]" confirm
-	if [ "$confirm" = "n" ] || [ "$confirm" = "N" ]; then
-		return
-	fi
-	cd ~/Documents/Projects
-	rm -rf ~/Documents/Projects/$1
-	python ~/deleteProject.py $1
+    if [ "$1" = "" ]; then
+        echo "Must include directory name, ex: delete demo"
+        return
+    fi
+	  
+    if [ ! -d ~/Documents/Projects/$1 ]; then
+        echo "Directory doesn't exist"
+        return
+    fi
+
+    read -p "Are you sure you want to delete this directory? [y/n] " confirm
+    if [ "$confirm" = "n" ] || [ "$confirm" = "N" ]; then
+        "Canceling..."
+        return
+    fi
+
+    rm -rf ~/Documents/Projects/$1
+    echo "Project folder deleted successfully"
+
+    unset confirm
+    read -p "Do you want to delete your github repository? [y/n] " confirm
+    if [ "$confirm" = "n" ] || [ "$confirm" = "N" ]; then
+        "Canceling..."
+        return
+    fi
+    python ~/deleteProject.py
 }
