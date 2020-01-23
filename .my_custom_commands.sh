@@ -66,5 +66,5 @@ function delete() {
         "Canceling..."
         return
     fi
-    python ~/deleteProject.py
+    python ~/deleteProject.py  $1
 }
