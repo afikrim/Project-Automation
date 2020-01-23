@@ -20,16 +20,16 @@ options = [
 
 def main():
     header()
-    if sys.argv[1] == 1:
+    if sys.argv[1] == '':
         error()
-        
-    username = raw_input("Username for 'www.github.com': ")
-    password = getpass.getpass("Password for '" + username + "'@github.com: ")
+        sys.exit(0)
+    username = raw_input("Username for 'https://github.com': ")
+    password = getpass.getpass("Password for 'https://" + username + "'@github.com: ")
     user = Github(username, password)
     cprint("Searching your repo in github", "yellow")
     try:
         repo = user.get_repo(username + "/" + sys.argv[1])
-        cprint("Repository found in github.com/" + username + "/" + sys.argv[1], "green")
+        cprint("Repository found in https://github.com/" + username + "/" + sys.argv[1], "green")
         cprint("Deleting repository", "yellow")
         repo.delete()
         cprint("Successfully delete repo", "green")
