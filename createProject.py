@@ -68,6 +68,14 @@ def run_command(project_name='', language='', composer_repos='', node_package=[]
     if project_name == '' or language == '' or text_editor == '':
         error()
         sys.exit(1)
+
+    os.system("mkdir " + sys.argv[1] + '/' + project_name)
+    os.chdir(sys.argv[1] + '/' + project_name)
+
+    if git_repo:
+        cprint("Processing to github...", "yellow")
+        create_repos(project_name)
+
     if language.lower() == 'php':
         hasPhp = hasPhp()
         hasMysql = hasMysql()
@@ -79,38 +87,34 @@ def run_command(project_name='', language='', composer_repos='', node_package=[]
             if not hasComposer():
                 cprint(
                     "Look like you haven't install composer. You can get it from here : https://getcomposer.org/download/")
-                sys.exit(1)
+                sys.exit(0)
             install_framework(project_name, composer_repos, '')
         else:
             cprint("Creating project without framework", 'yellow')
             try:
-                os.system(
-                    "mkdir " + sys.argv[1] + '/' + project_name + ";cd " + project_name+";touch index.php"+";touch README.md")
+                os.system("touch index.php")
+                os.system("touch README.md")
                 cprint("Successfully create new directory.", 'yellow')
             except:
                 cprint("Something went wrong. Closing program")
-                sys.exit(1)
+                sys.exit(0)
 
     if language.lower() in ['js', 'javascript']:
-        os.system("mkdir " + sys.argv[1] + '/' + project_name)
         if not hasNodejs():
             cprint("Look like you haven't install nodejs on your machine, you can get it from here : https://nodejs.org/en/download/")
-            sys.exit(1)
+            sys.exit(0)
 
         if node_package != []:
             install_framework(project_name, '', node_package)
         else:
             cprint("Creating project without framework", 'yellow')
         try:
-            os.system(
-                "cd " + sys.argv[1] + '/' + project_name + ";touch index.js" + ";touch README.md")
+            os.system("touch index.js")
+            os.system("touch README.md")
             cprint("Successfully create new directory.", 'yellow')
         except:
             cprint("Something went wrong. Closing program")
             sys.exit(1)
-    if git_repo:
-        cprint("Processing to github...", "yellow")
-        create_repos(project_name)
     cprint("Opening text editor", 'yellow')
     os.system(text_editor + " " + sys.argv[1] + '/' + project_name)
     sys.exit()
@@ -118,22 +122,22 @@ def run_command(project_name='', language='', composer_repos='', node_package=[]
 
 def install_framework(project_name='', composer_repos='', node_package=[]):
     if composer_repos != '':
-        os.system("cd " + sys.argv[1] + ";composer create-project " +
-                  composer_repos + " " + project_name)
+        os.system("composer create-project " + composer_repos + " .")
     elif node_package != []:
         packages = ''
         for p in node_package:
             packages += p + " "
-        os.system("cd " + sys.argv[1] + '/' +
-                  project_name + ";npm init; npm i " + packages)
+        os.system("npm init")
+        os.system("npm i " + packages)
 
 
 def create_repos(project_name=''):
     loggedin = False
     user = object
+    username = ''
     while not loggedin:
-        username = raw_input("Username: ")
-        password = getpass.getpass(prompt="Password: ")
+        username = raw_input("Username for 'https://github.com': ")
+        password = getpass.getpass(prompt="Password for 'https://" + username + "@github.com: ")
         user = git(username, password).get_user()
         try:
             user.login
@@ -142,6 +146,22 @@ def create_repos(project_name=''):
             cprint("Your credentials are wrong!", "red")
     repo = user.create_repo(project_name)
     cprint("Successfully create repository", "green")
+    os.system("git init")
+    cprint("Adding remote repository", "yellow")
+    os.system("git remote add origin https://www.github.com/" + username + "/" + project_name + ".git")
+    cprint("Successfully add remote repository", "green")
+    cprint("Creating README.md", "yellow")
+    os.system("touch README.md")
+    cprint("Successfully create README.md", "green")
+    cprint("Adding README.md to remote repository", "yellow")
+    os.system("git add README.md")
+    cprint("Successfully add README.md to remote repository", "green")
+    cprint("Committing changes as Initial Commit", "yellow")
+    os.system("git commit -m 'Initial commit'")
+    cprint("Changes commited", "green")
+    cprint("Pushing commit", "yellow")
+    os.system("git push -u origin master")
+    cprint("Successfully push commit as Initial Commit")
 
 
 def hasPhp():
@@ -203,9 +223,6 @@ def error():
     cprint("Usage :", "yellow")
     cprint("  create [option] [argument]\n", 'white')
     cprint("  delete [project-name]\n", 'white')
-    cprint("Ex :", "yellow")
-    cprint("  create -p demo -l js -t code --npm --save express socket.io\n", 'white')
-    cprint("  delete demo\n", 'white')
     cprint("Options :", "yellow")
     global options
     for option in options:
