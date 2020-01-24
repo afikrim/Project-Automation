@@ -49,11 +49,11 @@ chmod +x /path/to/file.sh
 
 # example, chmod +x ~/Project-Automation/.my_custom_commands.sh
 ```
-Also move the python script to your root by run this command
+Also link the python script to your root by run this command
 ```
-mv /path/to/file ~/
+ln -s /path/to/file ~/file
 
-# example, mv ~/Project-Automation/createProject.py ~/
+# example, ln -s ~/Project-Automation/createProject.py ~/createProject.py
 ```
 Then don't forget to add this to your .bashrc file
 ```
