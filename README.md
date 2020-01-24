@@ -43,6 +43,12 @@ After you guys install it, you can go to root directory by run this command
 ```
 cd
 ```
+Then clone this project by type this in your shell
+```
+git clone https://github.com/afikrim/Project-Automation
+```
+#### NOTE : PLEASE CLONE IN ROOT DIRECTORY
+
 Then give permission to this shell program to execute by run this command
 ```
 chmod +x /path/to/file.sh
