@@ -2,7 +2,7 @@ import sys
 import os
 import getpass
 from termcolor import colored, cprint
-from github import Github
+from github import Github as git
 
 
 options = [
@@ -23,9 +23,18 @@ def main():
     if sys.argv[1] == '':
         error()
         sys.exit(0)
-    username = raw_input("Username for 'https://github.com': ")
-    password = getpass.getpass("Password for 'https://" + username + "'@github.com: ")
-    user = Github(username, password)
+    loggedin = False
+    user = object
+    username = ''
+    while not loggedin:
+        username = raw_input("Username for 'https://github.com': ")
+        password = getpass.getpass(prompt="Password for 'https://" + username + "@github.com: ")
+        user = git(username, password).get_user()
+        try:
+            user.login
+            loggedin = True
+        except:
+            cprint("Your credentials are wrong!", "red")
     cprint("Searching your repo in github", "yellow")
     try:
         repo = user.get_repo(username + "/" + sys.argv[1])
